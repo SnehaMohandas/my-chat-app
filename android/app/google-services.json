@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "522457820299",
+    "project_id": "babble-chat-app-b804a",
+    "storage_bucket": "babble-chat-app-b804a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:522457820299:android:8101a57e44402f184b388e",
+        "android_client_info": {
+          "package_name": "com.example.babble_chat_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "522457820299-4jgncja4qjab4pgnen49v7nhct6r8tm0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChhxUBKQE3w39rVezd_mW5qFpB9agu8XE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "522457820299-4jgncja4qjab4pgnen49v7nhct6r8tm0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
