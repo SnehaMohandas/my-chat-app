@@ -1,5 +1,6 @@
 import 'package:babble_chat_app/controllers/authcontroller.dart';
-import 'package:babble_chat_app/screens/main_screen.dart';
+import 'package:babble_chat_app/screens/home_screen/home_screen.dart';
+import 'package:babble_chat_app/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -10,37 +11,60 @@ class SignupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var authController = Get.put(AuthController());
+    var authController = AuthController();
+
     return Scaffold(
       body: SafeArea(
           child: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(25.0),
         child: Column(
           children: [
-            SizedBox(
-              height: 20,
-            ),
-            TextField(
-              controller: authController.userController,
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  labelText: 'Username',
-                  prefixIcon: Icon(Icons.person)),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            TextField(
-              controller: authController.phoneController,
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.phone_android_outlined),
-                prefixText: '+91',
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-                labelText: 'Phone Number',
-              ),
-            ),
+            Form(
+                key: authController.formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Please enter your Username";
+                        } else if (value.length < 5) {
+                          return "Username must have atleast 5 characters";
+                        } else {
+                          return null;
+                        }
+                      },
+                      controller: authController.userController,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          labelText: 'Username',
+                          prefixIcon: Icon(Icons.person)),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Please enter your phone number";
+                        } else if (value.length != 10) {
+                          return "Please enter a valid phone number";
+                        } else {
+                          return null;
+                        }
+                      },
+                      keyboardType: TextInputType.number,
+                      controller: authController.phoneController,
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(Icons.phone_android_outlined),
+                        prefixText: '+91',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        labelText: 'Phone Number',
+                      ),
+                    ),
+                  ],
+                )),
             SizedBox(
               height: 15,
             ),
@@ -82,6 +106,14 @@ class SignupScreen extends StatelessWidget {
                 ),
               ),
             ),
+            SizedBox(
+              height: 20,
+            ),
+            TextButton(
+                onPressed: () {
+                  Get.offAll(() => HomeScreen());
+                },
+                child: Text('Go To Home')),
             Spacer(),
             Align(
                 alignment: Alignment.bottomCenter,
@@ -90,20 +122,20 @@ class SignupScreen extends StatelessWidget {
                   child: ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
-                            Color.fromARGB(255, 125, 22, 143)),
+                            Color.fromARGB(255, 90, 11, 70)),
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                    side: BorderSide(
-                                        color: Color.fromARGB(
-                                            255, 32, 126, 180))))),
+                          borderRadius: BorderRadius.circular(18.0),
+                        ))),
                     onPressed: () async {
-                      if (authController.isOtpSent.value == false) {
-                        authController.isOtpSent.value = true;
-                        await authController.sentOtp();
-                      } else {
-                        authController.verifyOtp();
+                      if (authController.formKey.currentState!.validate()) {
+                        if (authController.isOtpSent.value == false) {
+                          authController.isOtpSent.value = true;
+                          await authController.sentOtp();
+                        } else {
+                          authController.verifyOtp();
+                        }
                       }
                     },
                     child: Text('Continue'),

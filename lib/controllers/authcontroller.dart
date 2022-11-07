@@ -1,4 +1,7 @@
-import 'package:babble_chat_app/screens/home_screen.dart';
+import 'package:babble_chat_app/controllers/controller_.const.dart';
+import 'package:babble_chat_app/screens/home_screen/home_screen.dart';
+import 'package:babble_chat_app/screens/splash_screen.dart';
+import 'package:babble_chat_app/screens/signup_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -6,23 +9,43 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
-  FirebaseAuth auth = FirebaseAuth.instance;
-  FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  User? currentUser = FirebaseAuth.instance.currentUser;
-  var collectionUser = 'users';
+  // FirebaseAuth auth = FirebaseAuth.instance;
+  // FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  late Rx<User?> firebaseUser;
+
+  //User? currentUser = FirebaseAuth.instance.currentUser;
+  // var collectionUser = 'users';
   var userController = TextEditingController();
   var phoneController = TextEditingController();
   final otpController = List.generate(6, (index) => TextEditingController());
 
   var isOtpSent = false.obs;
-
+  var formKey = GlobalKey<FormState>();
   String verificationID = '';
+
+  @override
+  void onReady() {
+    super.onReady();
+    firebaseUser = Rx<User?>(auth.currentUser);
+    firebaseUser.bindStream(auth.userChanges());
+    ever(firebaseUser, _initialScreen);
+  }
+
+  _initialScreen(User? user) async {
+    if (user == null) {
+      Get.offAll(() => SignupScreen());
+    } else {
+      Get.offAll(() => HomeScreen());
+    }
+  }
 
   sentOtp() async {
     await auth.verifyPhoneNumber(
       timeout: const Duration(seconds: 60),
       phoneNumber: '+91${phoneController.text}',
-      verificationCompleted: (PhoneAuthCredential credential) {},
+      verificationCompleted: (PhoneAuthCredential credential) async {
+        await auth.signInWithCredential(credential);
+      },
       verificationFailed: (FirebaseAuthException e) {
         Get.snackbar('Error', 'Problem when send the OTP');
       },
@@ -43,23 +66,30 @@ class AuthController extends GetxController {
       PhoneAuthCredential credential = await PhoneAuthProvider.credential(
           verificationId: verificationID, smsCode: otp);
 
-      final User? userData = (await auth.signInWithCredential(credential)).user;
+      final User? user = (await auth.signInWithCredential(credential)).user;
 
-      if (userData != null) {
-        DocumentReference store = FirebaseFirestore.instance
-            .collection(collectionUser)
-            .doc(userData.uid);
-        await store.set({
-          'id': userData.uid,
+      if (user != null) {
+        // DocumentReference store =
+        FirebaseFirestore.instance.collection(collectionUser).doc(user.uid)
+            //;
+            // await store
+            .set({
+          'id': user.uid,
           'name': userController.text.toString(),
-          'phone': phoneController.text.toString()
-        });
-
-        Get.offAll(() => HomeScreen());
+          'phone': phoneController.text.toString(),
+          'about': '',
+          'image_url': '',
+        }, SetOptions(merge: true)
+                // }
+                );
       }
     } catch (e) {
       print(e.toString());
       Get.snackbar('Error', 'Error occuring when verifying OTP');
     }
+  }
+
+  signOut() async {
+    auth.signOut();
   }
 }
