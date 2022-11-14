@@ -11,13 +11,13 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get.put(AuthController());
-    //Get.put(ProfileController());
+    Get.put(AuthController());
+
     return Scaffold(
       body: Center(
         child: ElevatedButton(
             onPressed: () {
-              // Get.offAll(() => SignupScreen());
+              Get.offAll(() => SignupScreen());
             },
             child: Text('Signup')),
       ),

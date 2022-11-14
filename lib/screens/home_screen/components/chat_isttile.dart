@@ -7,9 +7,14 @@ Widget chatlist() {
     padding: EdgeInsets.only(left: 25, right: 25),
     child: ListView.separated(
         itemBuilder: (context, index) => ListTile(
-              onTap: () => Get.offAll(() => ChatScreen()),
+              onTap: () => Get.offAll(
+                  () => ChatScreen(
+                        userName: 'Demo name',
+                      ),
+                  transition: Transition.downToUp),
               leading: const CircleAvatar(
                 radius: 25,
+                backgroundColor: Colors.white,
                 backgroundImage: AssetImage('assets/images/placeholder.png'),
               ),
               title: Text('User${index}'),

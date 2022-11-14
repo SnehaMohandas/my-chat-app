@@ -1,4 +1,5 @@
 import 'package:babble_chat_app/controllers/authcontroller.dart';
+import 'package:babble_chat_app/screens/compose_screen/compose_screen.dart';
 import 'package:babble_chat_app/screens/home_screen/components/appbar.dart';
 import 'package:babble_chat_app/screens/home_screen/components/chat_isttile.dart';
 import 'package:babble_chat_app/screens/home_screen/components/drawer.dart';
@@ -22,7 +23,7 @@ class HomeScreen extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Color.fromARGB(255, 90, 11, 70),
           onPressed: () {
-            Get.offAll(() => SignupScreen());
+            Get.offAll(() => ComposeScreen());
           },
           child: Icon(Icons.add),
         ),

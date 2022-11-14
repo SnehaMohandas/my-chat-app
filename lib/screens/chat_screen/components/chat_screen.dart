@@ -7,7 +7,8 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 
 class ChatScreen extends StatelessWidget {
-  const ChatScreen({super.key});
+  final String? userName;
+  const ChatScreen({super.key, required this.userName});
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +40,10 @@ class ChatScreen extends StatelessWidget {
                 children: [
                   Expanded(
                       child: RichText(
-                          text: const TextSpan(children: [
+                          text: TextSpan(children: [
                     TextSpan(
-                        text: 'Username\n',
-                        style: TextStyle(
+                        text: '$userName\n',
+                        style: const TextStyle(
                             color: Colors.black,
                             fontSize: 20,
                             fontWeight: FontWeight.w500)),

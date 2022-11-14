@@ -11,8 +11,6 @@ class SignupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var authController = AuthController();
-
     return Scaffold(
       body: SafeArea(
           child: Padding(
@@ -20,7 +18,7 @@ class SignupScreen extends StatelessWidget {
         child: Column(
           children: [
             Form(
-                key: authController.formKey,
+                key: AuthController.instance.formKey,
                 child: Column(
                   children: [
                     TextFormField(
@@ -33,7 +31,7 @@ class SignupScreen extends StatelessWidget {
                           return null;
                         }
                       },
-                      controller: authController.userController,
+                      controller: AuthController.instance.userController,
                       decoration: InputDecoration(
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20)),
@@ -54,7 +52,7 @@ class SignupScreen extends StatelessWidget {
                         }
                       },
                       keyboardType: TextInputType.number,
-                      controller: authController.phoneController,
+                      controller: AuthController.instance.phoneController,
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.phone_android_outlined),
                         prefixText: '+91',
@@ -72,7 +70,7 @@ class SignupScreen extends StatelessWidget {
                 'We will send an SMS with a confirmation code to your phone number'),
             Obx(
               () => Visibility(
-                visible: authController.isOtpSent.value,
+                visible: AuthController.instance.isOtpSent.value,
                 child: SizedBox(
                   height: 80,
                   child: Row(
@@ -83,7 +81,8 @@ class SignupScreen extends StatelessWidget {
                               height: 65,
                               width: 50,
                               child: TextField(
-                                controller: authController.otpController[index],
+                                controller: AuthController
+                                    .instance.otpController[index],
                                 onChanged: (value) {
                                   if (value.length == 1 && index <= 5) {
                                     FocusScope.of(context).nextFocus();
@@ -129,12 +128,13 @@ class SignupScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(18.0),
                         ))),
                     onPressed: () async {
-                      if (authController.formKey.currentState!.validate()) {
-                        if (authController.isOtpSent.value == false) {
-                          authController.isOtpSent.value = true;
-                          await authController.sentOtp();
+                      if (AuthController.instance.formKey.currentState!
+                          .validate()) {
+                        if (AuthController.instance.isOtpSent.value == false) {
+                          AuthController.instance.isOtpSent.value = true;
+                          await AuthController.instance.sentOtp();
                         } else {
-                          authController.verifyOtp();
+                          await AuthController.instance.verifyOtp();
                         }
                       }
                     },

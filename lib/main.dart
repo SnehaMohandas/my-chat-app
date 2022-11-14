@@ -8,9 +8,9 @@ import 'package:get/get_navigation/get_navigation.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp()
-      .then((value) => Get.put(AuthController()))
-      .then((value) => Get.put(ProfileController()));
+  await Firebase.initializeApp();
+  //.then((value) => Get.put(AuthController()));
+
   print('main build');
   runApp(const MyApp());
 }

@@ -7,7 +7,7 @@ Widget appbar(GlobalKey<ScaffoldState> key) {
         borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(35), bottomRight: Radius.circular(35)),
         color: Color.fromARGB(255, 90, 11, 70)),
-    height: 120,
+    height: 130,
     padding: EdgeInsets.only(right: 20),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -37,7 +37,7 @@ Widget appbar(GlobalKey<ScaffoldState> key) {
                   fontWeight: FontWeight.bold,
                   fontSize: 15)),
         ])),
-        const CircleAvatar(
+        CircleAvatar(
           backgroundImage: AssetImage('assets/images/placeholder.png'),
         ),
       ],

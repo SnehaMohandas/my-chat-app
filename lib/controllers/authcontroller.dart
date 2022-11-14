@@ -1,4 +1,5 @@
 import 'package:babble_chat_app/controllers/controller_.const.dart';
+import 'package:babble_chat_app/controllers/profile_controller.dart';
 import 'package:babble_chat_app/screens/home_screen/home_screen.dart';
 import 'package:babble_chat_app/screens/splash_screen.dart';
 import 'package:babble_chat_app/screens/signup_screen.dart';
@@ -9,9 +10,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AuthController extends GetxController {
+  static AuthController instance = Get.find();
+
+  late Rx<User?> firebaseUser;
   // FirebaseAuth auth = FirebaseAuth.instance;
   // FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  late Rx<User?> firebaseUser;
 
   //User? currentUser = FirebaseAuth.instance.currentUser;
   // var collectionUser = 'users';
@@ -33,7 +36,7 @@ class AuthController extends GetxController {
 
   _initialScreen(User? user) async {
     if (user == null) {
-      Get.offAll(() => SignupScreen());
+      Get.offAll(() => SplashScreen());
     } else {
       Get.offAll(() => HomeScreen());
     }
@@ -69,19 +72,15 @@ class AuthController extends GetxController {
       final User? user = (await auth.signInWithCredential(credential)).user;
 
       if (user != null) {
-        // DocumentReference store =
-        FirebaseFirestore.instance.collection(collectionUser).doc(user.uid)
-            //;
-            // await store
-            .set({
+        DocumentReference store =
+            FirebaseFirestore.instance.collection(collectionUser).doc(user.uid);
+        await store.set({
           'id': user.uid,
           'name': userController.text.toString(),
           'phone': phoneController.text.toString(),
           'about': '',
-          'image_url': '',
-        }, SetOptions(merge: true)
-                // }
-                );
+          'image_url': ''
+        }, SetOptions(merge: true));
       }
     } catch (e) {
       print(e.toString());
@@ -91,5 +90,11 @@ class AuthController extends GetxController {
 
   signOut() async {
     auth.signOut();
+    userController.text = '';
+    phoneController.text = '';
+    isOtpSent.value = false;
+    for (var i = 0; i < otpController.length; i++) {
+      otpController[i].text = '';
+    }
   }
 }

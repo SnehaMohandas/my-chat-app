@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:babble_chat_app/controllers/authcontroller.dart';
 import 'package:babble_chat_app/controllers/controller_.const.dart';
+import 'package:babble_chat_app/controllers/profile_controller.dart';
 import 'package:babble_chat_app/screens/profile_screen/components/profile_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -26,10 +31,9 @@ Widget drawer() {
         const SizedBox(
           height: 30,
         ),
-        const CircleAvatar(
-          radius: 48,
-          backgroundImage: AssetImage('assets/images/placeholder.png'),
-        ),
+        CircleAvatar(
+            radius: 48,
+            backgroundImage: AssetImage('assets/images/placeholder.png')),
         const SizedBox(
           height: 10,
         ),
@@ -57,8 +61,8 @@ Widget drawer() {
         Padding(
           padding: const EdgeInsets.only(left: 12),
           child: ListTile(
-            onTap: () {
-              auth.signOut();
+            onTap: () async {
+              await AuthController.instance.signOut();
             },
             leading: const Icon(Icons.logout),
             title: const Text('LogOut'),
