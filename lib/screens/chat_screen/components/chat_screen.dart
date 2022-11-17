@@ -1,17 +1,21 @@
-import 'dart:ffi';
-
+import 'package:babble_chat_app/controllers/chat_controller.dart';
+import 'package:babble_chat_app/screens/chat_screen/components/chat_bubble.dart';
 import 'package:babble_chat_app/screens/home_screen/home_screen.dart';
+import 'package:babble_chat_app/services/store_services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class ChatScreen extends StatelessWidget {
-  final String? userName;
-  const ChatScreen({super.key, required this.userName});
+  const ChatScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var chatController = Get.put(ChatController());
+
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 90, 11, 70),
       appBar: AppBar(
@@ -42,13 +46,13 @@ class ChatScreen extends StatelessWidget {
                       child: RichText(
                           text: TextSpan(children: [
                     TextSpan(
-                        text: '$userName\n',
+                        text: "${chatController.feiendName}\n",
                         style: const TextStyle(
                             color: Colors.black,
                             fontSize: 20,
                             fontWeight: FontWeight.w500)),
                     TextSpan(
-                        text: 'Last seen',
+                        text: '${chatController.friendPhone}',
                         style: TextStyle(color: Colors.black, fontSize: 13))
                   ]))),
                   const Icon(
@@ -61,82 +65,41 @@ class ChatScreen extends StatelessWidget {
             const SizedBox(
               height: 40,
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(right: 3, left: 3),
-                child: ListView.builder(
-                    physics: BouncingScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: 30,
-                    itemBuilder: (context, index) => Directionality(
-                          textDirection: index.isEven
-                              ? TextDirection.ltr
-                              : TextDirection.rtl,
-                          child: Container(
-                            margin: EdgeInsets.only(bottom: 12),
-                            child: Row(
-                              children: [
-                                const CircleAvatar(
-                                  radius: 18,
-                                  backgroundImage: AssetImage(
-                                      'assets/images/placeholder.png'),
-                                ),
-                                const SizedBox(
-                                  width: 12,
-                                ),
-                                Directionality(
-                                  textDirection: TextDirection.ltr,
-                                  child: Container(
-                                    padding: EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: index.isEven
-                                            ? const Color.fromARGB(
-                                                255, 207, 198, 198)
-                                            : const Color.fromARGB(
-                                                255, 133, 112, 136)),
-                                    constraints: BoxConstraints(maxWidth: 210),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          "Hai akshay ",
-                                          style: TextStyle(
-                                            color: index.isEven
-                                                ? Colors.black
-                                                : Colors.white,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                        Text(
-                                          '10.00 AM',
-                                          style: TextStyle(
-                                              fontSize: 10,
-                                              color: index.isEven
-                                                  ? const Color.fromARGB(
-                                                      255, 66, 62, 62)
-                                                  : const Color.fromARGB(
-                                                      255, 240, 233, 233)),
-                                          textAlign: TextAlign.right,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )),
-              ),
+            Obx(
+              () => Expanded(
+                  child: chatController.isLoading.value
+                      ? Center(
+                          child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation(Colors.black),
+                        ))
+                      : StreamBuilder(
+                          stream: StoreServices.getChats(chatController.chatId),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<QuerySnapshot> snapshot) {
+                            if (snapshot.hasData) {
+                              return ListView(
+                                children: snapshot.data!.docs
+                                    .mapIndexed((currentValue, index) {
+                                  var doc = snapshot.data!.docs[index];
+                                  return chatBubble(index, doc);
+                                }).toList(),
+                              );
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          })),
             ),
             SizedBox(
-              height: 50,
+              height: 58,
               child: Row(
                 children: [
                   Expanded(
                       child: Container(
                     child: TextField(
+                      //maxLines: null,
+                      controller: chatController.messageController,
                       decoration: InputDecoration(
                         focusedBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
@@ -152,7 +115,7 @@ class ChatScreen extends StatelessWidget {
                         ),
                         hintText: 'Type something....',
                         hintStyle: const TextStyle(
-                          fontSize: 13,
+                          fontSize: 14,
                         ),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20)),
@@ -168,6 +131,8 @@ class ChatScreen extends StatelessWidget {
                     child: IconButton(
                         onPressed: () {
                           print('object');
+                          chatController.sendMessage(
+                              chatController.messageController.text);
                         },
                         icon: const Icon(
                           Icons.send,

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:babble_chat_app/controllers/authcontroller.dart';
-import 'package:babble_chat_app/controllers/controller_.const.dart';
+import 'package:babble_chat_app/controllers/firebase_const.dart';
 import 'package:babble_chat_app/controllers/profile_controller.dart';
 import 'package:babble_chat_app/screens/home_screen/home_screen.dart';
 import 'package:babble_chat_app/screens/profile_screen/components/picker_dialog.dart';
@@ -68,6 +68,7 @@ class ProfileScreen extends GetView<AuthController> {
                   profileController.nameController.text = data['name'];
                   profileController.phoneController.text = data['phone'];
                   profileController.aboutController.text = data['about'];
+
                   // if (data.toString().contains('about')) {
                   //   profileController.aboutController.text = data['about'];
                   // } else {

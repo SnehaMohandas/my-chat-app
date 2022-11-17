@@ -1,4 +1,4 @@
-import 'package:babble_chat_app/controllers/controller_.const.dart';
+import 'package:babble_chat_app/controllers/firebase_const.dart';
 import 'package:babble_chat_app/controllers/profile_controller.dart';
 import 'package:babble_chat_app/screens/home_screen/home_screen.dart';
 import 'package:babble_chat_app/screens/splash_screen.dart';

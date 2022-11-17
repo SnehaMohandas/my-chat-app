@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:babble_chat_app/controllers/authcontroller.dart';
-import 'package:babble_chat_app/controllers/controller_.const.dart';
+import 'package:babble_chat_app/controllers/firebase_const.dart';
 import 'package:babble_chat_app/controllers/profile_controller.dart';
 import 'package:babble_chat_app/screens/profile_screen/components/profile_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

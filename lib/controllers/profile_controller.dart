@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import 'package:babble_chat_app/controllers/controller_.const.dart';
+import 'package:babble_chat_app/controllers/firebase_const.dart';
+import 'package:babble_chat_app/screens/profile_screen/components/profile_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -27,13 +28,6 @@ class ProfileController extends GetxController {
       'about': aboutController.text,
       'image_url': imageLink
     }, SetOptions(merge: true));
-  }
-
-  addImageField() async {
-    await firebaseFirestore
-        .collection(collectionUser)
-        .doc(currentUser!.uid)
-        .set({'image_url': ''});
   }
 
   // image picking method

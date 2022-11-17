@@ -1,3 +1,4 @@
+import 'package:babble_chat_app/controllers/chat_controller.dart';
 import 'package:babble_chat_app/screens/chat_screen/components/chat_screen.dart';
 import 'package:babble_chat_app/screens/home_screen/home_screen.dart';
 import 'package:babble_chat_app/services/store_services.dart';
@@ -85,11 +86,13 @@ class ComposeScreen extends StatelessWidget {
                                       padding:
                                           EdgeInsets.only(right: 10, left: 10)),
                                   onPressed: () {
-                                    Get.offAll(
-                                        () => ChatScreen(
-                                              userName: "${doc['name']}",
-                                            ),
-                                        transition: Transition.downToUp);
+                                    Get.to(() => ChatScreen(),
+                                        transition: Transition.downToUp,
+                                        arguments: [
+                                          doc['name'],
+                                          doc['id'],
+                                          doc['phone']
+                                        ]);
                                   },
                                   icon: Icon(Icons.message),
                                   label: Text('Message'))
