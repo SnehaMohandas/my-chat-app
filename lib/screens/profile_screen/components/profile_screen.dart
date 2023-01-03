@@ -8,36 +8,30 @@ import 'package:babble_chat_app/screens/profile_screen/components/picker_dialog.
 import 'package:babble_chat_app/services/store_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class ProfileScreen extends GetView<AuthController> {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Get.put(AuthController());
     var profileController = Get.put(ProfileController());
 
-    print('p build');
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
             onPressed: () {
-              Get.offAll(() => HomeScreen());
+              Get.to(() => const HomeScreen());
             },
-            icon: Icon(Icons.arrow_back)),
+            icon: const Icon(Icons.arrow_back)),
         elevation: 0,
-        //  centerTitle: true,
+        centerTitle: true,
         title: const Text(
           'Profile',
           style: TextStyle(fontSize: 28),
         ),
-        backgroundColor: Color.fromARGB(255, 90, 11, 70),
+        backgroundColor: const Color.fromARGB(255, 90, 11, 70),
         actions: [
           TextButton(
               onPressed: () async {
@@ -68,12 +62,6 @@ class ProfileScreen extends GetView<AuthController> {
                   profileController.nameController.text = data['name'];
                   profileController.phoneController.text = data['phone'];
                   profileController.aboutController.text = data['about'];
-
-                  // if (data.toString().contains('about')) {
-                  //   profileController.aboutController.text = data['about'];
-                  // } else {
-                  //   profileController.aboutController.text = '';
-                  // }
 
                   return Stack(children: [
                     Positioned(
@@ -152,7 +140,7 @@ class ProfileScreen extends GetView<AuthController> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 ListTile(
-                                  leading: Icon(Icons.person),
+                                  leading: const Icon(Icons.person),
                                   title: TextFormField(
                                     controller:
                                         profileController.nameController,
@@ -167,20 +155,18 @@ class ProfileScreen extends GetView<AuthController> {
                                     'This is your username .This name will be visible to your BabbleChat contacts.',
                                     style: TextStyle(fontSize: 12),
                                   ),
-                                  trailing: Icon(
+                                  trailing: const Icon(
                                     Icons.edit,
                                   ),
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 ListTile(
-                                    leading: Icon(Icons.info),
+                                    leading: const Icon(Icons.info),
                                     title: TextFormField(
-                                      //onSaved: profileController.updateProfile(),
                                       controller:
                                           profileController.aboutController,
-
                                       cursorColor: Colors.black,
                                       decoration: const InputDecoration(
                                           border: InputBorder.none,
@@ -189,18 +175,18 @@ class ProfileScreen extends GetView<AuthController> {
                                             color: Colors.black,
                                           )),
                                     ),
-                                    trailing: Icon(
+                                    trailing: const Icon(
                                       Icons.edit,
                                     )),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 ListTile(
-                                    leading: Icon(Icons.phone),
+                                    leading: const Icon(Icons.phone),
                                     title: TextField(
                                       controller:
                                           profileController.phoneController,
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                           border: InputBorder.none,
                                           labelText: 'Phone Number',
                                           labelStyle:
@@ -212,7 +198,7 @@ class ProfileScreen extends GetView<AuthController> {
                         ))
                   ]);
                 } else {
-                  return Center(
+                  return const Center(
                       child: CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation(Colors.black),
                   ));

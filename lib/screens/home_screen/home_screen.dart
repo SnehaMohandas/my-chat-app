@@ -1,13 +1,10 @@
-import 'package:babble_chat_app/controllers/authcontroller.dart';
 import 'package:babble_chat_app/controllers/home_controller.dart';
 import 'package:babble_chat_app/screens/compose_screen/compose_screen.dart';
 import 'package:babble_chat_app/screens/home_screen/components/appbar.dart';
 import 'package:babble_chat_app/screens/home_screen/components/chat_isttile.dart';
 import 'package:babble_chat_app/screens/home_screen/components/drawer.dart';
-import 'package:babble_chat_app/screens/signup_screen.dart';
 import 'package:babble_chat_app/services/store_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -26,18 +23,18 @@ class HomeScreen extends StatelessWidget {
         key: scaffoldKey,
         drawer: drawer(),
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Color.fromARGB(255, 90, 11, 70),
+          backgroundColor: const Color.fromARGB(255, 90, 11, 70),
           onPressed: () {
-            Get.to(() => ComposeScreen());
+            Get.to(() => const ComposeScreen());
           },
-          child: Icon(Icons.add),
+          child: const Icon(Icons.add),
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             appbar(scaffoldKey),
             const Padding(
-              padding: const EdgeInsets.only(
+              padding: EdgeInsets.only(
                 left: 40,
                 top: 25,
               ),
@@ -52,13 +49,13 @@ class HomeScreen extends StatelessWidget {
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (!snapshot.hasData) {
-                        return Center(
+                        return const Center(
                           child: CircularProgressIndicator(
                             valueColor: AlwaysStoppedAnimation(Colors.black),
                           ),
                         );
                       } else if (snapshot.data!.docs.isEmpty) {
-                        return Center(
+                        return const Center(
                           child: Text("Start messaging..."),
                         );
                       } else {

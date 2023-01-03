@@ -1,6 +1,4 @@
-import 'package:babble_chat_app/controllers/chat_controller.dart';
 import 'package:babble_chat_app/controllers/firebase_const.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class StoreServices {
   static getUser(String id) {
@@ -26,8 +24,10 @@ class StoreServices {
   static getMessages() {
     return firebaseFirestore
         .collection(collectionChat)
-        .where("users.${currentUser!.uid}", isEqualTo: null)
-        .where('last_msg', isNotEqualTo: '')
+        .where(
+          "chatroom.${auth.currentUser!.uid}",
+          isNull: true,
+        )
         .snapshots();
   }
 }

@@ -4,8 +4,6 @@ import 'package:babble_chat_app/screens/home_screen/home_screen.dart';
 import 'package:babble_chat_app/services/store_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -17,22 +15,23 @@ class ChatScreen extends StatelessWidget {
     var chatController = Get.put(ChatController());
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 90, 11, 70),
+      backgroundColor: const Color.fromARGB(255, 90, 11, 70),
       appBar: AppBar(
         elevation: 0,
         toolbarHeight: 80,
-        backgroundColor: Color.fromARGB(255, 90, 11, 70),
+        backgroundColor: const Color.fromARGB(255, 90, 11, 70),
         leading: IconButton(
             onPressed: () {
-              Get.offAll(() => HomeScreen());
+              Get.offAll(() => const HomeScreen());
             },
-            icon: Icon(Icons.arrow_back)),
+            icon: const Icon(Icons.arrow_back)),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.more_vert_rounded))
+          IconButton(
+              onPressed: () {}, icon: const Icon(Icons.more_vert_rounded))
         ],
       ),
       body: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.vertical(top: Radius.circular(50))),
@@ -49,11 +48,8 @@ class ChatScreen extends StatelessWidget {
                         text: "${chatController.feiendName}\n",
                         style: const TextStyle(
                             color: Colors.black,
-                            fontSize: 20,
+                            fontSize: 23,
                             fontWeight: FontWeight.w500)),
-                    TextSpan(
-                        text: '${chatController.friendPhone}',
-                        style: TextStyle(color: Colors.black, fontSize: 13))
                   ]))),
                   const Icon(
                     Icons.call,
@@ -63,12 +59,12 @@ class ChatScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(
-              height: 40,
+              height: 25,
             ),
             Obx(
               () => Expanded(
                   child: chatController.isLoading.value
-                      ? Center(
+                      ? const Center(
                           child: CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation(Colors.black),
                         ))
@@ -85,9 +81,7 @@ class ChatScreen extends StatelessWidget {
                                 }).toList(),
                               );
                             } else {
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              );
+                              return Container();
                             }
                           })),
             ),
@@ -98,7 +92,6 @@ class ChatScreen extends StatelessWidget {
                   Expanded(
                       child: Container(
                     child: TextField(
-                      //maxLines: null,
                       controller: chatController.messageController,
                       decoration: InputDecoration(
                         focusedBorder: OutlineInputBorder(
@@ -127,10 +120,9 @@ class ChatScreen extends StatelessWidget {
                     width: 10,
                   ),
                   CircleAvatar(
-                    backgroundColor: Color.fromARGB(255, 90, 11, 70),
+                    backgroundColor: const Color.fromARGB(255, 90, 11, 70),
                     child: IconButton(
                         onPressed: () {
-                          print('object');
                           chatController.sendMessage(
                               chatController.messageController.text);
                         },

@@ -1,4 +1,6 @@
-import 'package:babble_chat_app/screens/home_screen/components/drawer.dart';
+import 'package:babble_chat_app/controllers/firebase_const.dart';
+import 'package:babble_chat_app/services/store_services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 Widget appbar(GlobalKey<ScaffoldState> key) {
@@ -8,7 +10,7 @@ Widget appbar(GlobalKey<ScaffoldState> key) {
             bottomLeft: Radius.circular(35), bottomRight: Radius.circular(35)),
         color: Color.fromARGB(255, 90, 11, 70)),
     height: 130,
-    padding: EdgeInsets.only(right: 20),
+    padding: const EdgeInsets.only(right: 20),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -18,7 +20,7 @@ Widget appbar(GlobalKey<ScaffoldState> key) {
             onPressed: () {
               key.currentState!.openDrawer();
             },
-            icon: Icon(Icons.settings),
+            icon: const Icon(Icons.settings),
             color: Colors.white,
           ),
         ),
@@ -37,9 +39,23 @@ Widget appbar(GlobalKey<ScaffoldState> key) {
                   fontWeight: FontWeight.bold,
                   fontSize: 15)),
         ])),
-        CircleAvatar(
-          backgroundImage: AssetImage('assets/images/placeholder.png'),
-        ),
+        FutureBuilder(
+            future: StoreServices.getUser(auth.currentUser!.uid),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasData) {
+                var data = snapshot.data!.docs[0];
+                return CircleAvatar(
+                    backgroundColor: Colors.white,
+                    backgroundImage: data['image_url'] == ''
+                        ? const AssetImage('assets/images/placeholder.png')
+                        : NetworkImage(data['image_url']) as ImageProvider);
+              } else {
+                return const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation(Colors.white),
+                );
+              }
+            })
       ],
     ),
   );

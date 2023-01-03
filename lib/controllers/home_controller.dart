@@ -4,22 +4,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeController extends GetxController {
   static HomeController instance = Get.find();
-  late SharedPreferences preferences;
+  SharedPreferences? preferences;
+  String username = '';
+  String userimage = '';
 
   getUserDetails() async {
     await firebaseFirestore
         .collection(collectionUser)
-        .where('id', isEqualTo: currentUser!.uid)
+        .where('id', isEqualTo: auth.currentUser!.uid)
         .get()
         .then((value) async {
       preferences = await SharedPreferences.getInstance();
-      preferences.setStringList(
+      preferences!.setStringList(
           'user_details', [value.docs[0]['name'], value.docs[0]['image_url']]);
     });
   }
 
   @override
-  void onInit() {
+  void onInit() async {
     getUserDetails();
     super.onInit();
   }

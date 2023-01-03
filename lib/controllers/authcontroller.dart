@@ -1,11 +1,8 @@
 import 'package:babble_chat_app/controllers/firebase_const.dart';
-import 'package:babble_chat_app/controllers/profile_controller.dart';
 import 'package:babble_chat_app/screens/home_screen/home_screen.dart';
 import 'package:babble_chat_app/screens/splash_screen.dart';
-import 'package:babble_chat_app/screens/signup_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,11 +10,7 @@ class AuthController extends GetxController {
   static AuthController instance = Get.find();
 
   late Rx<User?> firebaseUser;
-  // FirebaseAuth auth = FirebaseAuth.instance;
-  // FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
-  //User? currentUser = FirebaseAuth.instance.currentUser;
-  // var collectionUser = 'users';
   var userController = TextEditingController();
   var phoneController = TextEditingController();
   final otpController = List.generate(6, (index) => TextEditingController());
@@ -36,9 +29,9 @@ class AuthController extends GetxController {
 
   _initialScreen(User? user) async {
     if (user == null) {
-      Get.offAll(() => SplashScreen());
+      Get.offAll(() => const SplashScreen());
     } else {
-      Get.offAll(() => HomeScreen());
+      Get.offAll(() => const HomeScreen());
     }
   }
 
@@ -83,8 +76,7 @@ class AuthController extends GetxController {
         }, SetOptions(merge: true));
       }
     } catch (e) {
-      print(e.toString());
-      Get.snackbar('Error', 'Error occuring when verifying OTP');
+      Get.snackbar('Error', 'Error occuring when sending OTP');
     }
   }
 

@@ -1,9 +1,6 @@
 import 'package:babble_chat_app/controllers/authcontroller.dart';
-import 'package:babble_chat_app/screens/home_screen/home_screen.dart';
-import 'package:babble_chat_app/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:get/get.dart';
 
 class SignupScreen extends StatelessWidget {
@@ -17,6 +14,16 @@ class SignupScreen extends StatelessWidget {
         padding: const EdgeInsets.all(25.0),
         child: Column(
           children: [
+            const Text(
+              'Sign up',
+              style: TextStyle(
+                  color: Color.fromARGB(255, 90, 11, 70),
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 30,
+            ),
             Form(
                 key: AuthController.instance.formKey,
                 child: Column(
@@ -36,9 +43,9 @@ class SignupScreen extends StatelessWidget {
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(20)),
                           labelText: 'Username',
-                          prefixIcon: Icon(Icons.person)),
+                          prefixIcon: const Icon(Icons.person)),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 15,
                     ),
                     TextFormField(
@@ -54,7 +61,7 @@ class SignupScreen extends StatelessWidget {
                       keyboardType: TextInputType.number,
                       controller: AuthController.instance.phoneController,
                       decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.phone_android_outlined),
+                        prefixIcon: const Icon(Icons.phone_android_outlined),
                         prefixText: '+91',
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20)),
@@ -63,10 +70,10 @@ class SignupScreen extends StatelessWidget {
                     ),
                   ],
                 )),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
-            Text(
+            const Text(
                 'We will send an SMS with a confirmation code to your phone number'),
             Obx(
               () => Visibility(
@@ -105,23 +112,18 @@ class SignupScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            TextButton(
-                onPressed: () {
-                  Get.offAll(() => HomeScreen());
-                },
-                child: Text('Go To Home')),
-            Spacer(),
+            const Spacer(),
             Align(
                 alignment: Alignment.bottomCenter,
                 child: SizedBox(
-                  width: 250,
+                  width: 230,
                   child: ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
-                            Color.fromARGB(255, 90, 11, 70)),
+                            const Color.fromARGB(255, 90, 11, 70)),
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
@@ -138,7 +140,7 @@ class SignupScreen extends StatelessWidget {
                         }
                       }
                     },
-                    child: Text('Continue'),
+                    child: const Text('Continue'),
                   ),
                 ))
           ],

@@ -1,9 +1,7 @@
-import 'dart:io';
-
 import 'package:babble_chat_app/controllers/authcontroller.dart';
 import 'package:babble_chat_app/controllers/firebase_const.dart';
-import 'package:babble_chat_app/controllers/profile_controller.dart';
 import 'package:babble_chat_app/screens/profile_screen/components/profile_screen.dart';
+import 'package:babble_chat_app/services/store_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,7 +12,7 @@ Widget drawer() {
         borderRadius: BorderRadius.horizontal(right: Radius.circular(25))),
     child: Column(
       children: [
-        SizedBox(
+        const SizedBox(
           height: 25,
         ),
         ListTile(
@@ -31,15 +29,37 @@ Widget drawer() {
         const SizedBox(
           height: 30,
         ),
-        CircleAvatar(
-            radius: 48,
-            backgroundImage: AssetImage('assets/images/placeholder.png')),
-        const SizedBox(
-          height: 10,
-        ),
-        const Text(
-          'Username',
-          style: TextStyle(fontSize: 15),
+        FutureBuilder(
+          future: StoreServices.getUser(auth.currentUser!.uid),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasData) {
+              var data = snapshot.data!.docs[0];
+              return Container(
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                        radius: 48,
+                        backgroundColor: Colors.white,
+                        backgroundImage: data['image_url'] == ''
+                            ? const AssetImage('assets/images/placeholder.png')
+                            : NetworkImage(data['image_url']) as ImageProvider),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      "${data['name']}",
+                      style: const TextStyle(fontSize: 15, color: Colors.black),
+                    ),
+                  ],
+                ),
+              );
+            } else {
+              return const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(Colors.black),
+              );
+            }
+          },
         ),
         const SizedBox(
           height: 10,
@@ -52,7 +72,7 @@ Widget drawer() {
           padding: const EdgeInsets.only(left: 12),
           child: ListTile(
             onTap: () {
-              Get.offAll(() => ProfileScreen());
+              Get.offAll(() => const ProfileScreen());
             },
             leading: const Icon(Icons.key),
             title: const Text('Account'),

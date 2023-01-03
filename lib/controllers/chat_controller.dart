@@ -6,23 +6,21 @@ import 'package:get/get.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class ChatController extends GetxController {
-  //static ChatController instance = Get.find();
-  //variables for chat
   dynamic chatId;
   var chats = firebaseFirestore.collection(collectionChat);
   var username =
-      HomeController.instance.preferences.getStringList('user_details')![0];
-  var userId = currentUser!.uid;
+      HomeController.instance.preferences!.getStringList('user_details')![0];
+  var userId = auth.currentUser!.uid;
   var userphone = currentUser!.phoneNumber;
   var feiendName = Get.arguments[0];
   var friendId = Get.arguments[1];
-  var friendPhone = Get.arguments[2];
   var isLoading = false.obs;
 
   var messageController = TextEditingController();
 
   getChatId() async {
     isLoading(true);
+
     await chats
         .where('users', isEqualTo: {friendId: null, userId: null})
         .limit(1)
@@ -31,21 +29,22 @@ class ChatController extends GetxController {
           if (snapshot.docs.isNotEmpty) {
             chatId = snapshot.docs.single.id;
           } else {
-            chats.add({
+            await chats.add({
               'users': {userId: null, friendId: null},
               'friend_name': feiendName,
               'user_name': username,
               'toId': '',
               'fromId': '',
               'created_on': null,
-              'last_msg': ''
-            }).then((value) {
+              'last_msg': '',
+            }).then((value) async {
               {
-                chatId = value.id;
+                chatId = await value.id;
               }
             });
           }
         });
+
     isLoading(false);
   }
 
@@ -55,12 +54,15 @@ class ChatController extends GetxController {
         'created_on': FieldValue.serverTimestamp(),
         'last_msg': msg,
         'toId': friendId,
-        'fromId': userId
+        'fromId': userId,
+        'user_name': username,
+        'friend_name': feiendName,
+        'chatroom': {userId: null, friendId: null}
       });
       chats.doc(chatId).collection(collectionMessage).doc().set({
         'created_on': FieldValue.serverTimestamp(),
         'msg': msg,
-        'uid': userId
+        'uid': userId,
       }).then((value) {
         messageController.clear();
       });

@@ -8,49 +8,47 @@ Widget chatBubble(index, DocumentSnapshot doc) {
       doc['created_on'] == null ? DateTime.now() : doc['created_on'].toDate();
   var time = intl.DateFormat("h.mma").format(t);
   return Directionality(
-    textDirection:
-        doc['uid'] == currentUser!.uid ? TextDirection.rtl : TextDirection.ltr,
+    textDirection: doc['uid'] == auth.currentUser!.uid
+        ? TextDirection.rtl
+        : TextDirection.ltr,
     child: Container(
-      margin: EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-          const CircleAvatar(
-            radius: 18,
-            backgroundImage: AssetImage('assets/images/placeholder.png'),
-          ),
           const SizedBox(
             width: 12,
           ),
           Directionality(
             textDirection: TextDirection.ltr,
             child: Container(
-              padding: EdgeInsets.only(left: 12, right: 12, bottom: 8, top: 12),
+              padding: const EdgeInsets.only(
+                  left: 12, right: 12, bottom: 8, top: 12),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: doc['uid'] == currentUser!.uid
+                  color: doc['uid'] == auth.currentUser!.uid
                       ? const Color.fromARGB(255, 207, 198, 198)
                       : const Color.fromARGB(255, 133, 112, 136)),
-              constraints: BoxConstraints(maxWidth: 210),
+              constraints: const BoxConstraints(maxWidth: 210),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
                     "${doc['msg']}",
                     style: TextStyle(
-                      color: doc['uid'] == currentUser!.uid
+                      color: doc['uid'] == auth.currentUser!.uid
                           ? Colors.black
                           : Colors.white,
                       fontSize: 15,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   Text(
-                    '$time',
+                    time,
                     style: TextStyle(
                         fontSize: 9,
-                        color: doc['uid'] == currentUser!.uid
+                        color: doc['uid'] == auth.currentUser!.uid
                             ? const Color.fromARGB(255, 66, 62, 62)
                             : const Color.fromARGB(255, 240, 233, 233)),
                     textAlign: TextAlign.right,
