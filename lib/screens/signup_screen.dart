@@ -1,8 +1,6 @@
 import 'package:babble_chat_app/controllers/authcontroller.dart';
-import 'package:babble_chat_app/screens/main_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:get/get.dart';
 
 class SignupScreen extends StatelessWidget {
@@ -10,45 +8,76 @@ class SignupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var authController = Get.put(AuthController());
     return Scaffold(
       body: SafeArea(
           child: Padding(
-        padding: const EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(25.0),
         child: Column(
           children: [
-            SizedBox(
-              height: 20,
+            const Text(
+              'Sign up',
+              style: TextStyle(
+                  color: Color.fromARGB(255, 90, 11, 70),
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold),
             ),
-            TextField(
-              controller: authController.userController,
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20)),
-                  labelText: 'Username',
-                  prefixIcon: Icon(Icons.person)),
+            const SizedBox(
+              height: 30,
             ),
-            SizedBox(
+            Form(
+                key: AuthController.instance.formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Please enter your Username";
+                        } else if (value.length < 5) {
+                          return "Username must have atleast 5 characters";
+                        } else {
+                          return null;
+                        }
+                      },
+                      controller: AuthController.instance.userController,
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          labelText: 'Username',
+                          prefixIcon: const Icon(Icons.person)),
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "Please enter your phone number";
+                        } else if (value.length != 10) {
+                          return "Please enter a valid phone number";
+                        } else {
+                          return null;
+                        }
+                      },
+                      keyboardType: TextInputType.number,
+                      controller: AuthController.instance.phoneController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.phone_android_outlined),
+                        prefixText: '+91',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        labelText: 'Phone Number',
+                      ),
+                    ),
+                  ],
+                )),
+            const SizedBox(
               height: 15,
             ),
-            TextField(
-              controller: authController.phoneController,
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.phone_android_outlined),
-                prefixText: '+91',
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-                labelText: 'Phone Number',
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            Text(
+            const Text(
                 'We will send an SMS with a confirmation code to your phone number'),
             Obx(
               () => Visibility(
-                visible: authController.isOtpSent.value,
+                visible: AuthController.instance.isOtpSent.value,
                 child: SizedBox(
                   height: 80,
                   child: Row(
@@ -59,7 +88,8 @@ class SignupScreen extends StatelessWidget {
                               height: 65,
                               width: 50,
                               child: TextField(
-                                controller: authController.otpController[index],
+                                controller: AuthController
+                                    .instance.otpController[index],
                                 onChanged: (value) {
                                   if (value.length == 1 && index <= 5) {
                                     FocusScope.of(context).nextFocus();
@@ -82,31 +112,35 @@ class SignupScreen extends StatelessWidget {
                 ),
               ),
             ),
-            Spacer(),
+            const SizedBox(
+              height: 20,
+            ),
+            const Spacer(),
             Align(
                 alignment: Alignment.bottomCenter,
                 child: SizedBox(
-                  width: 250,
+                  width: 230,
                   child: ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
-                            Color.fromARGB(255, 125, 22, 143)),
+                            const Color.fromARGB(255, 90, 11, 70)),
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(18.0),
-                                    side: BorderSide(
-                                        color: Color.fromARGB(
-                                            255, 32, 126, 180))))),
+                          borderRadius: BorderRadius.circular(18.0),
+                        ))),
                     onPressed: () async {
-                      if (authController.isOtpSent.value == false) {
-                        authController.isOtpSent.value = true;
-                        await authController.sentOtp();
-                      } else {
-                        authController.verifyOtp();
+                      if (AuthController.instance.formKey.currentState!
+                          .validate()) {
+                        if (AuthController.instance.isOtpSent.value == false) {
+                          AuthController.instance.isOtpSent.value = true;
+                          await AuthController.instance.sentOtp();
+                        } else {
+                          await AuthController.instance.verifyOtp();
+                        }
                       }
                     },
-                    child: Text('Continue'),
+                    child: const Text('Continue'),
                   ),
                 ))
           ],
